@@ -17,9 +17,9 @@ if CIMEROOT is None:
     raise SystemExit("ERROR: must set CIMEROOT environment variable")
 sys.path.append(os.path.join(CIMEROOT, "scripts", "Tools"))
 
-NCEPLIBS_DIR = os.environ.get("NCEPLIBS_DIR")
-if NCEPLIBS_DIR is None:
-    raise SystemExit("ERROR: must set NCEPLIBS_DIR environment variable")
+#NCEPLIBS_DIR = os.environ.get("NCEPLIBS_DIR")
+#if NCEPLIBS_DIR is None:
+#    raise SystemExit("ERROR: must set NCEPLIBS_DIR environment variable")
 
 from standard_script_setup import *
 from CIME.case import Case
@@ -241,13 +241,13 @@ def prep_input(case, datestamp, nmlgen_input, ic_file_prefix, prefix, input_type
         input_files["global_hyblev"] = [os.path.join(dir_fix_am,"global_hyblev.l{}.txt".format(levp)), "ln", os.path.join("INPUT","global_hyblev.l{}.txt".format(levp))]
 
         # Grib2 specific file
-        input_files["var_map"] = [os.path.join(NCEPLIBS_DIR,"share","GFSphys_var_map.txt"), "ln", "GFSphys_var_map.txt"]
+#        input_files["var_map"] = [os.path.join(NCEPLIBS_DIR,"share","GFSphys_var_map.txt"), "ln", "GFSphys_var_map.txt"]
 
     # Post-processing specific files (gfs_post, copy from source directory)
-    if "case.gfs_post" in jobs:
-        input_files["postxconfig1"] = [os.path.join(NCEPLIBS_DIR,"share","postxconfig-NT-GFS.txt"), "ln", "postxconfig-NT-GFS.txt"]
-        input_files["postxconfig2"] = [os.path.join(NCEPLIBS_DIR,"share","postxconfig-NT-GFS-F00.txt"), "ln", "postxconfig-NT-GFS-F00.txt"]
-        input_files["params_grib2_tbl"] = [os.path.join(NCEPLIBS_DIR,"share","params_grib2_tbl_new"), "ln", "params_grib2_tbl_new"]
+#    if "case.gfs_post" in jobs:
+#        input_files["postxconfig1"] = [os.path.join(NCEPLIBS_DIR,"share","postxconfig-NT-GFS.txt"), "ln", "postxconfig-NT-GFS.txt"]
+#        input_files["postxconfig2"] = [os.path.join(NCEPLIBS_DIR,"share","postxconfig-NT-GFS-F00.txt"), "ln", "postxconfig-NT-GFS-F00.txt"]
+#        input_files["params_grib2_tbl"] = [os.path.join(NCEPLIBS_DIR,"share","params_grib2_tbl_new"), "ln", "params_grib2_tbl_new"]
 
     # Make sure that rundir exists. If not, make it:
     if not os.path.exists(rundir):
@@ -756,7 +756,7 @@ def _create_namelist_model_configure(case, confdir, config, infile, nmlgen, name
     nmlgen = nmlOverwrite(namelist_user, nmlgen)
 
     # remove parameters from the namelist based on the selected app
-    remove_lst = [] 
+    remove_lst = []
     if "hafs" in app:
         remove_lst.extend(["imo", "jmo", "iau_offset", "ideflate", "nbits", "output_history", "write_dopost", "atm_coupling_interval_sec", "fhrot"])
     else:
@@ -866,7 +866,7 @@ def _create_namelist_chgres(case, confdir, config, infile, nmlgen, nmlgen_def, n
 
     # Check/correct task count used for post-processing
     atm_grid = case.get_value("ATM_GRID").replace('r', '')
-    mach = case.get_value("MACH") 
+    mach = case.get_value("MACH")
 
     # Specific fix for Stampede2
     tasks_per_node = int(case.get_value("tasks_per_node", subgroup="case.chgres"))

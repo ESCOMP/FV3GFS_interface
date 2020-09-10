@@ -69,7 +69,7 @@ def nmlKeepChangedOnly(nmlgen_ini, nmlgen_cur, namelist_user):
                 continue
 
             # list of namelist options that will always appear in the namelist file
-            lst = ['ccpp_suite']
+            lst = ['ccpp_suite', 'nstf_name']
             if var in lst:
                 continue
 
@@ -621,7 +621,7 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
 
     # if nstf_name is None here then a default of 0,0,0,0,0 is assumed
     nstf_name = nmlgen.get_value('nstf_name')
-    if "hafs" not in app:
+    if "mrweather" in app:
         if not nstf_name[0] or nstf_name[0] == '0':
             ccpp = nmlgen.get_value('ccpp_suite')
             nmlgen.set_value('ccpp_suite',ccpp+'_no_nsst')
@@ -633,7 +633,6 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
     ntiles = int(nmlgen_input.get_value('ntiles@fv_core_nml'))
     write_tasks_per_group = int(nmlgen_model.get_value('write_tasks_per_group'))
     write_groups = int(nmlgen_model.get_value('write_groups'))
-
 
     ntask_atm_config = layout_x*layout_y*ntiles+write_tasks_per_group*write_groups
     if ntask_atm_config != ntask_atm:
@@ -753,8 +752,12 @@ def _create_namelist_model_configure(case, confdir, config, infile, nmlgen, name
     # Change number of used PEs if there is a mismatch
     ntask_atm = int(case.get_value('NTASKS_ATM'))
     pe_member = int(nmlgen.get_value('PE_MEMBER01'))
-    if pe_member != ntask_atm:
-        nmlgen.set_value('PE_MEMBER01', ntask_atm)
+    if "s2s" in app:
+        ntask_total = int(case.get_value('TOTALPES'))
+    else:
+        if pe_member != ntask_atm:
+            nmlgen.set_value('PE_MEMBER01', ntask_atm)
+
     if ntask_atm == 8:
         nmlgen.set_value("write_tasks_per_group",2)
 
@@ -1126,6 +1129,13 @@ def buildnml(case, caseroot, compname):
         prefix = ""
 
     #----------------------------------------------------
+    # Query jobs
+    #----------------------------------------------------
+
+    env_workflow = case.get_env("workflow")
+    jobs = env_workflow.get_jobs()
+
+    #----------------------------------------------------
     # Set input type
     #----------------------------------------------------
 
@@ -1140,73 +1150,77 @@ def buildnml(case, caseroot, compname):
         icdir = os.path.join(case.get_value("DIN_LOC_IC"),"{:04d}{:02d}".format(yyyy,mm),"{:04d}{:02d}{:02d}".format(yyyy,mm,dd))
 
     # Check input directory to find input_file format (same folder could have both .nemsio and .grb2)
-    logger.info("Checking {} directory to find raw input files ...".format(icdir))
-    input_dict = {}
-    if os.path.exists(icdir):
-        for f in os.listdir(icdir):
-            if "atm.input.ic.nemsio" in f or "sfc.input.ic.nemsio" in f:
-                if 'gaussian_nemsio' in input_dict.keys():
-                    input_dict['gaussian_nemsio'].append(f)
-                else:
-                    input_dict.update({'gaussian_nemsio':[f]})
-                logger.info("Found '{}' in input directory".format(f))
-            elif "atm.input.ic.grb2" in f:
-                if 'grib2' in input_dict.keys():
-                    input_dict['grib2'].append(f)
-                else:
-                    input_dict.update({'grib2':[f]})
-                logger.info("Found '{}' in input directory".format(f))
-            elif "atm.input.ic.nc" in f or "sfc.input.ic.nc" in f:
-                if 'gaussian_netcdf' in input_dict.keys():
-                    input_dict['gaussian_netcdf'].append(f)
-                else:
-                    input_dict.update({'gaussian_netcdf':[f]})
-                logger.info("Found '{}' in input directory".format(f))
+    if "case.chgres" in jobs:
+        logger.info("Checking {} directory to find raw input files ...".format(icdir))
+        input_dict = {}
+        if os.path.exists(icdir):
+            for f in os.listdir(icdir):
+                if "atm.input.ic.nemsio" in f or "sfc.input.ic.nemsio" in f:
+                    if 'gaussian_nemsio' in input_dict.keys():
+                        input_dict['gaussian_nemsio'].append(f)
+                    else:
+                        input_dict.update({'gaussian_nemsio':[f]})
+                    logger.info("Found '{}' in input directory".format(f))
+                elif "atm.input.ic.grb2" in f:
+                    if 'grib2' in input_dict.keys():
+                        input_dict['grib2'].append(f)
+                    else:
+                        input_dict.update({'grib2':[f]})
+                    logger.info("Found '{}' in input directory".format(f))
+                elif "atm.input.ic.nc" in f or "sfc.input.ic.nc" in f:
+                    if 'gaussian_netcdf' in input_dict.keys():
+                        input_dict['gaussian_netcdf'].append(f)
+                    else:
+                        input_dict.update({'gaussian_netcdf':[f]})
+                    logger.info("Found '{}' in input directory".format(f))
 
-    # Remove duplicates
-    input_type_lst = list(set(input_dict.keys()))
+        # Remove duplicates
+        input_type_lst = list(set(input_dict.keys()))
 
-    # Check user_nl_ufsatm for input_type and force buildnml to use it
-    input_type_user = namelist_user.get_value('input_type')[0]
-    if input_type_user:
-        input_type_lst = list([input_type_user.strip('\"').strip('\'')])
+        # Check user_nl_ufsatm for input_type and force buildnml to use it
+        input_type_user = namelist_user.get_value('input_type')[0]
+        if input_type_user:
+            input_type_lst = list([input_type_user.strip('\"').strip('\'')])
 
-    # If input_type is empty throw error
-    if not input_type_lst:
-        logger.info("No input file/s found locally! {}".format(icdir))
-        logger.info("Please download raw initial condition and rename the file/s using following convention:")
-        logger.info("\t NEMSIO: atm.input.ic.nemsio and sfc.input.ic.nemsio")
-        logger.info("\t GRIB2 : atm.input.ic.grb2")
-        logger.info("\t NetCDF: atm.input.ic.nc and sfc.input.ic.nc")
-        expect(False, "Exiting ...")
-    else:
-        # Set grib2 as default, if we have multiple data formats such as both .grb2 and .nc
-        if len(input_type_lst) > 1:
-            input_type = "grib2"
-        else:
-            input_type = input_type_lst[0]
-
-        logger.info("CHGRES namelist option 'input_type' is set to {}".format(input_type))
-
-        # Check defined input_type exists in the dictionary
-        if input_type in input_dict.keys():
-            # Check the input file matched with the input_type
-            for f in input_dict[input_type]:
-                if not os.path.exists(os.path.join(icdir,f)):
-                    expect(False, "{} not found!".format(os.path.join(icdir,f)))
-                else:
-                    logger.info("CHGRES will use {}".format(os.path.join(icdir,f)))
-        else:
-            # If there is no file with given input_type, print information and exit
-            if "gaussian_nemsio" == input_type:
-                logger.info("Please download raw initial condition in NEMSIO format rename it as atm.input.ic.nemsio and sfc.input.ic.nemsio")
-            elif "grib2" == input_type:
-                logger.info("Please download raw initial condition in GRIB2 format and rename it as atm.input.ic.grb2")
-            elif "gaussian_netcdf" == input_type:
-                logger.info("Please download raw initial condition in NETCDF format and rename it as atm.input.ic.nc and sfc.input.ic.nc")
-            else:
-                logger.info("Namelist option input_type can be 'gaussian_nemsio', 'grib2' or 'gaussian_netcdf'.")
+        # If input_type is empty throw error
+        if not input_type_lst:
+            logger.info("No input file/s found locally! {}".format(icdir))
+            logger.info("Please download raw initial condition and rename the file/s using following convention:")
+            logger.info("\t NEMSIO: atm.input.ic.nemsio and sfc.input.ic.nemsio")
+            logger.info("\t GRIB2 : atm.input.ic.grb2")
+            logger.info("\t NetCDF: atm.input.ic.nc and sfc.input.ic.nc")
             expect(False, "Exiting ...")
+        else:
+            # Set grib2 as default, if we have multiple data formats such as both .grb2 and .nc
+            if len(input_type_lst) > 1:
+                input_type = "grib2"
+            else:
+                input_type = input_type_lst[0]
+
+            logger.info("CHGRES namelist option 'input_type' is set to {}".format(input_type))
+
+            # Check defined input_type exists in the dictionary
+            if input_type in input_dict.keys():
+                # Check the input file matched with the input_type
+                for f in input_dict[input_type]:
+                    if not os.path.exists(os.path.join(icdir,f)):
+                        expect(False, "{} not found!".format(os.path.join(icdir,f)))
+                    else:
+                        logger.info("CHGRES will use {}".format(os.path.join(icdir,f)))
+            else:
+                # If there is no file with given input_type, print information and exit
+                if "gaussian_nemsio" == input_type:
+                    logger.info("Please download raw initial condition in NEMSIO format rename it as atm.input.ic.nemsio and sfc.input.ic.nemsio")
+                elif "grib2" == input_type:
+                    logger.info("Please download raw initial condition in GRIB2 format and rename it as atm.input.ic.grb2")
+                elif "gaussian_netcdf" == input_type:
+                    logger.info("Please download raw initial condition in NETCDF format and rename it as atm.input.ic.nc and sfc.input.ic.nc")
+                else:
+                    logger.info("Namelist option input_type can be 'gaussian_nemsio', 'grib2' or 'gaussian_netcdf'.")
+                expect(False, "Exiting ...")
+    else:
+       input_type = "none"
+       logger.info("chgres not in the workflow")
 
     #----------------------------------------------------
     # Namelist generator for atmosphere model (model_configure)
@@ -1273,13 +1287,6 @@ def buildnml(case, caseroot, compname):
     #----------------------------------------------------
 
     prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type)
-
-    #----------------------------------------------------
-    # Query jobs
-    #----------------------------------------------------
-
-    env_workflow = case.get_env("workflow")
-    jobs = env_workflow.get_jobs()
 
     #----------------------------------------------------
     # Namelist generator for chgres

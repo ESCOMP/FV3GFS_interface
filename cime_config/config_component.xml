@@ -5,10 +5,11 @@
 <entry_id version="3.0">
 
   <description>
-    <desc atm="ufsatm[%v15p2][%v16beta][%v0nocp]">UFSATM Atmosphere with:</desc>
+    <desc atm="ufsatm[%v15p2][%v16beta][%v0nocp][%2017coupled]">UFSATM Atmosphere with:</desc>
     <desc option="v15p2">CCPP physics version 15p2</desc>
     <desc option="v16beta">CCPP physics version 16beta</desc>
     <desc option="v0nocp">CCPP physics version for hafs</desc>
+    <desc option="2017coupled">CCPP physics version for S2S</desc>
   </description>
 
   <entry id="COMP_ATM">
@@ -30,10 +31,10 @@
 
   <entry id="CCPP_SUITES">
     <type>char</type>
-    <valid_values>FV3_GFS_v15p2_coupled,FV3_GFS_v15p2,FV3_GFS_v16beta,HAFS_v0_gfdlmp_nocpugwd,HAFS_v0_gfdlmp_nocp,HAFS_v0_gfdlmp</valid_values>
+    <valid_values>FV3_GFS_2017_coupled,FV3_GFS_v15p2,FV3_GFS_v16beta,HAFS_v0_gfdlmp_nocpugwd,HAFS_v0_gfdlmp_nocp,HAFS_v0_gfdlmp</valid_values>
     <default_value>FV3_GFS_v15p2</default_value>
     <values match="first">
-      <value compset="s2s">FV3_GFS_v15p2_coupled</value>
+      <value compset="2017coupled">FV3_GFS_2017_coupled</value>
       <value compset="v15p2">FV3_GFS_v15p2</value>
       <value compset="v16beta">FV3_GFS_v16beta</value>
       <value compset="v0nocp">HAFS_v0_gfdlmp_nocp</value>

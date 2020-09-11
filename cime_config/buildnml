@@ -54,6 +54,17 @@ def checkList(lst):
             break
     return chk
 
+# returns active components
+def active_components(case):
+    # query compset
+    compset = case.get_value("COMPSET")
+    # parse compset
+    components = compset.split("_")[1:]
+    # remove stub components
+    components = [ x for x in components if "S" not in x[0] ]
+
+    return components
+
 # keep only changed namelist options
 def nmlKeepChangedOnly(nmlgen_ini, nmlgen_cur, namelist_user):
 
@@ -749,16 +760,19 @@ def _create_namelist_model_configure(case, confdir, config, infile, nmlgen, name
     elif 'nsteps' in rest_option:
         expect(False, "Option >nsteps< is not supported!")
 
-    # Change number of used PEs if there is a mismatch
-    ntask_atm = int(case.get_value('NTASKS_ATM'))
-    pe_member = int(nmlgen.get_value('PE_MEMBER01'))
-    if "s2s" in app:
-        ntask_total = int(case.get_value('TOTALPES'))
-    else:
-        if pe_member != ntask_atm:
-            nmlgen.set_value('PE_MEMBER01', ntask_atm)
+    # Query total number of PEs
+    components = active_components(case)
+    ntask = int(case.get_value('NTASKS_ATM'))
+    if len(components) > 1:
+        ntask = int(case.get_value('TOTALPES'))
 
-    if ntask_atm == 8:
+    # Change number of used PEs if there is a mismatch
+    pe_member = int(nmlgen.get_value('PE_MEMBER01'))
+    if pe_member != ntask:
+        nmlgen.set_value('PE_MEMBER01', ntask)
+
+    # Change number of write group for 8 PEs
+    if ntask == 8:
         nmlgen.set_value("write_tasks_per_group",2)
 
     # Test run specific modifications
@@ -1219,8 +1233,8 @@ def buildnml(case, caseroot, compname):
                     logger.info("Namelist option input_type can be 'gaussian_nemsio', 'grib2' or 'gaussian_netcdf'.")
                 expect(False, "Exiting ...")
     else:
-       input_type = "none"
-       logger.info("chgres not in the workflow")
+       input_type = None 
+       logger.info("CHGRES is not the part of the workflow. There is no need to set 'input_type'!")
 
     #----------------------------------------------------
     # Namelist generator for atmosphere model (model_configure)

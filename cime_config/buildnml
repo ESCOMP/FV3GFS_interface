@@ -512,6 +512,13 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
     lonb = 4*res
     latb = 2*res
 
+    # Specialization for S2S, just for C96
+    if "s2s" in app:
+        if res == 96:
+            jcap = 126
+            lonb = 384
+            latb = 190
+
     # Fix files, changes based on the selected resolution
     nmlgen_input.set_value('fnglac', value=os.path.join(dir_fix_am,"global_glacier.2x2.grb"))
     nmlgen_input.set_value('fnmxic', value=os.path.join(dir_fix_am,"global_maxice.2x2.grb"))
@@ -522,7 +529,7 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
     nmlgen_input.set_value('fnaisc', value=os.path.join(dir_fix_am,"CFSR.SEAICE.1982.2012.monthly.clim.grb"))
     nmlgen_input.set_value('fntg3c', value=os.path.join(dir_fix_am,"global_tg3clim.2.6x1.5.grb"))
     nmlgen_input.set_value('fnvegc', value=os.path.join(dir_fix_am,"global_vegfrac.0.144.decpercent.grb"))
-    if "mrweather" in app or "s2s" in app:
+    if "mrweather" in app:
         nmlgen_input.set_value('fnmskh', value=os.path.join(dir_fix_am,"global_slmask.t1534.3072.1536.grb"))
     else:
         nmlgen_input.set_value('fnmskh', value=os.path.join(dir_fix_am,"seaice_newland.grb"))
@@ -535,7 +542,7 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
     nmlgen_input.set_value('fnabsc', value=os.path.join(dir_fix_am,"global_mxsnoalb.uariz.t{}.{}.{}.rg.grb".format(jcap,lonb,latb)))
 
     # If the appropriate resolution fix file is not present, use the highest resolution available (T1534)
-    if "mrweather" in app or "s2s" in app:
+    if "mrweather" in app:
         if res == 96 or res == 192:
             jcap = 1534
             lonb = 3072
@@ -543,7 +550,7 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
             nmlgen_input.set_value('fnsmcc', value=os.path.join(dir_fix_am,"global_soilmgldas.statsgo.t{}.{}.{}.grb".format(jcap,lonb,latb)))
         else:
             nmlgen_input.set_value('fnsmcc', value=os.path.join(dir_fix_am,"global_soilmgldas.statsgo.t{}.{}.{}.grb".format(jcap,lonb,latb)))
-    elif "hafs" in app:
+    else:
         nmlgen_input.set_value('fnsmcc', value=os.path.join(dir_fix_am,"global_soilmgldas.t{}.{}.{}.grb".format(jcap,lonb,latb)))
 
     # Stochastic physics

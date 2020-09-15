@@ -61,6 +61,16 @@ def active_components(case):
 
     return components
 
+# converts one item list to value, if list has more than one item then do nothing
+def list_to_value(val):
+    if isinstance(val, list):
+        if len(val) == 1:
+            return val[0]
+        else:
+            return val
+    else:
+        return val
+
 # keep only changed namelist options
 def nmlKeepChangedOnly(nmlgen_ini, nmlgen_cur, namelist_user):
 
@@ -175,11 +185,14 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
 
     # TODO: make it xmlchnage variable
     new_o3forc = True
+    if "s2s" in app:
+        new_o3forc = False
 
     # Query date and time
     yyyy, mm, dd, hh = date_yyyymmddhh(case)
 
     # Define base directories
+    icdir = os.path.join(din_loc_ic,"{:04d}{:02d}".format(yyyy,mm),"{:04d}{:02d}{:02d}".format(yyyy,mm,dd))
     if "hafs" in app:
         dir_fix_am  = os.path.join(din_loc_root,"regional","fix_am")
         dir_fix_ufsatm = os.path.join(din_loc_root,"regional","fix",atm_grid)
@@ -188,7 +201,10 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
         dir_bdy = os.path.join(din_loc_root,"regional","bcond","{:04d}{:02d}{:02d}{:02d}".format(int(yyyy),int(mm),int(dd),hh))
     else:
         dir_fix_am  = os.path.join(din_loc_root,"global","fix","fix_am.v{}".format(datestamp))
-        dir_fix_ufsatm = os.path.join(din_loc_root,"global","fix","fix_fv3_gmted2010.v{}".format(datestamp),atm_grid)
+        if "s2s" in app:
+            dir_fix_ufsatm = os.path.join(din_loc_root,"global","fix","fix_fv3_gmted2010.v{}".format(datestamp),"{}_s2s".format(atm_grid))
+        else:
+            dir_fix_ufsatm = os.path.join(din_loc_root,"global","fix","fix_fv3_gmted2010.v{}".format(datestamp),atm_grid)
         dir_fix_parm = os.path.join(din_loc_root,"parm")
         dir_fix_lib = os.path.join(din_loc_root,"lib")
 
@@ -211,7 +227,10 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
             input_files["grid_tile{}".format(tile)] = [os.path.join(dir_fix_ufsatm,atm_grid+"_grid.tile{}.nc".format(tile)), "ln", os.path.join("INPUT",atm_grid+"_grid.tile{}.nc".format(tile))]
             input_files["orog_data{}".format(tile)] = [os.path.join(dir_fix_ufsatm,atm_grid+"_oro_data.tile{}.nc".format(tile)), "ln", os.path.join("INPUT","oro_data.tile{}.nc".format(tile))]
 
-    input_files["grid_spec"] = [os.path.join(dir_fix_ufsatm,atm_grid+"_mosaic.nc"), "ln", os.path.join("INPUT","grid_spec.nc")]
+    if "s2s" in app:
+        input_files["grid_spec"] = [os.path.join(icdir,"grid_spec.nc"), "ln", os.path.join("INPUT","grid_spec.nc")]
+    else:
+        input_files["grid_spec"] = [os.path.join(dir_fix_ufsatm,atm_grid+"_mosaic.nc"), "ln", os.path.join("INPUT","grid_spec.nc")]
     input_files["grid_mosaic"] = [os.path.join(dir_fix_ufsatm,atm_grid+"_mosaic.nc"), "ln", os.path.join("INPUT",atm_grid+"_mosaic.nc")]
 
     # GFS standard input files
@@ -229,6 +248,8 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
     input_files["co2hist"] = [os.path.join(dir_fix_am,"global_co2historicaldata_glob.txt"), "ln", "co2historicaldata_glob.txt"]
     input_files["co2mont"] = [os.path.join(dir_fix_am,"co2monthlycyc.txt"), "ln", "co2monthlycyc.txt"]
 
+    # NOTE: CIME.namelist.parse returns single values as one element list
+    ico2 = list_to_value(ico2)
     if ico2 and int(ico2) > 0:
         # TODO: make it automatic
         yy = int(time.strftime("%Y,%m,%d,%H,%M,%S").split(',')[0])
@@ -237,6 +258,8 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
 
     input_files["clmaero"] = [os.path.join(dir_fix_am,"global_climaeropac_global.txt"), "ln", "aerosol.dat"]
 
+    # NOTE: CIME.namelist.parse returns single values as one element list
+    iaer = list_to_value(iaer)
     if iaer and int(iaer) > 0 and "hafs" not in app:
         for year in range(1850,2000,10):
             input_files["volaer_{}".format(year)] = [os.path.join(dir_fix_am,"global_volcanic_aerosols_{}-{}.txt".format(year,year+9)), "ln", "volcanic_aerosols_{}-{}.txt".format(year,year+9)]
@@ -244,9 +267,10 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
     # Fixed files
     for var in nmlgen_input.get_group_variables('namsfc'):
         #pylint: disable=protected-access
-        var_type,_,_ = nmlgen_input._definition.split_type_string(var)
-        var_str = str(nmlgen_input.get_value(var)).strip()
-        if 'character' in var_type and var_str and 'igbp' not in var_str[0:4]:
+        #var_type,_,_ = nmlgen_input._definition.split_type_string(var)
+        var_str = str(nmlgen_input.get_value(var)).replace("'", "").strip()
+        #if 'character' in var_type and var_str and 'igbp' not in var_str[0:4]:
+        if '.grb' in var_str and 'igbp' not in var_str[0:4]:
             input_files[var] = [var_str, "ln", os.path.basename(var_str)]
 
     # Look for NCEPLIBS_DIR
@@ -419,8 +443,6 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
                             logger.debug("chgres source file {} not found".format(src_file))
             else:
                # Link pre-staged initial condition, not processed by workflow with chgres
-               icdir = os.path.join(din_loc_ic,"{:04d}{:02d}".format(yyyy,mm),"{:04d}{:02d}{:02d}".format(yyyy,mm,dd))                
-
                src_file = os.path.join(icdir,"gfs_ctrl.nc")
                if os.path.isfile(src_file):
                    symlink_force(src_file, os.path.join(rundirdst,"INPUT","gfs_ctrl.nc"))
@@ -438,6 +460,15 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
                        else:
                            expect(False, "initial condition file {} is required! Exiting ...".format(src_file))
 
+               # HACK for S2S
+               #if 's2s' in app:
+               #    f_lst = ['nems.configure','fd_nems.yaml','pio_in','mesh.mx025.nc']
+               #    for f in f_lst:
+               #        if os.path.isfile(os.path.join(icdir,f)):
+               #            print os.path.join(icdir,f)
+               #            safe_copy(os.path.join(icdir,f),os.path.join(rundirdst,f))
+               #    safe_copy(os.path.join(rundirdst,"fd_nems.yaml"), os.path.join(rundirdst,"fd.yaml"))
+
     # Write input file list
     with open(os.path.join(Buildconf,"ufsatm.input_data_list"), 'w') as input_data_list:
         for k,v in input_files.items():
@@ -445,13 +476,12 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
 
     # Copy/Link files
     for k,v in input_files.items():
-        if not os.path.isfile(os.path.join(rundir,v[2])):
-            if not os.path.isfile(v[0]):
-                logger.warning("WARNING: data file {} not found, will attempt to download.".format(v[0]))
-            elif "ln" in v[1]:
-                symlink_force(v[0], os.path.join(rundir,v[2]))
-            elif "cp":
-                safe_copy(v[0], os.path.join(rundir,v[2]))
+        if not os.path.isfile(v[0]):
+            logger.warning("WARNING: data file {} not found, will attempt to download.".format(v[0]))
+        elif "ln" in v[1]:
+            symlink_force(v[0], os.path.join(rundir,v[2]))
+        elif "cp":
+            safe_copy(v[0], os.path.join(rundir,v[2]))
 
     # Copy *_table files
     cimeroot_ufsatm = os.path.join(srcroot, "src", "model", "FV3", "cime", "cime_config")
@@ -512,7 +542,7 @@ def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_i
     lonb = 4*res
     latb = 2*res
 
-    # Specialization for S2S, just for C96
+    # Customization for S2S, just for C96
     if "s2s" in app:
         if res == 96:
             jcap = 126
@@ -1266,15 +1296,31 @@ def buildnml(case, caseroot, compname):
     # Namelist generator for atmosphere model (model_configure)
     #----------------------------------------------------
 
-    # create the namelist generator object
-    nmlgen_model_configure = NamelistGenerator(case, definition_file)
+    # allow using user provided model_configure
+    auto_namelist_file = os.path.join(confdir,"model_configure")
+    user_namelist_file = os.path.join(caseroot,"SourceMods","src.ufsatm","model_configure")
+    if os.path.isfile(user_namelist_file):
+        logger.info("Using user provided model_configure file {}".format(user_namelist_file))
+        if os.path.isfile(auto_namelist_file):
+            os.remove(auto_namelist_file)
+        safe_copy(user_namelist_file,auto_namelist_file)
+        # TODO: need to implement nuopc parser to create nmlgen_model_configure from existing model_configure
+        # CIME issue: https://github.com/ESMCI/cime/issues/3705
+        # nmlgen_model_configure = parse_nuopc(auto_namelist_file)
+    else:
+        logger.info("Using auto-generated model_configure file {}".format(auto_namelist_file))
 
-    # create namelist model_configure
-    _create_namelist_model_configure(case, confdir, config, namelist_infile, nmlgen_model_configure, namelist_user, prefix)
+        # create the namelist generator object
+        nmlgen_model_configure = NamelistGenerator(case, definition_file)
+
+        # create namelist model_configure
+        _create_namelist_model_configure(case, confdir, config, namelist_infile, nmlgen_model_configure, namelist_user, prefix)
 
     # copy namelist files to rundir
     if os.path.isdir(rundir):
+        # HACK for S2S
         file1 = os.path.join(confdir, "model_configure")
+        #file1 = os.path.join("/glade","work","turuncu","UFS","S2S","rt_194339","cpld_fv3_ccpp_mom6_cice_cmeps_2d_atm_flux","model_configure")
         file2 = os.path.join(rundir, "model_configure")
         logger.debug("ufsatm configuration copy: file1 %s file2 %s " %(file1, file2))
         safe_copy(file1, file2)
@@ -1283,14 +1329,26 @@ def buildnml(case, caseroot, compname):
     # Namelist generator for atmosphere model (input.nml.fv3)
     #----------------------------------------------------
 
-    # create the namelist generator object
-    nmlgen_input = NamelistGenerator(case, definition_file)
+    # allow using user provided atm_in aka input.nml
+    auto_namelist_file = os.path.join(confdir,"atm_in")
+    user_namelist_file = os.path.join(caseroot,"SourceMods","src.ufsatm","atm_in")
+    if os.path.isfile(user_namelist_file):
+        logger.info("Using user provided atm_in file {}".format(user_namelist_file))
+        if os.path.isfile(auto_namelist_file):
+            os.remove(auto_namelist_file)
+        safe_copy(user_namelist_file,auto_namelist_file)
+        nmlgen_input = parse(auto_namelist_file)
+    else:
+        logger.info("Using auto-generated atm_in file {}".format(auto_namelist_file))
 
-    # create copy of nmlgen_input to modify
-    nmlgen_input_def = NamelistGenerator(case, definition_file)
+        # create the namelist generator object
+        nmlgen_input = NamelistGenerator(case, definition_file)
 
-    # create namelist input.nml.fv3
-    _create_namelist_input(case, confdir, config, namelist_infile, nmlgen_model_configure, nmlgen_input, nmlgen_input_def, namelist_user, datestamp, input_type)
+        # create copy of nmlgen_input to modify
+        nmlgen_input_def = NamelistGenerator(case, definition_file)
+
+        # create namelist input.nml.fv3
+        _create_namelist_input(case, confdir, config, namelist_infile, nmlgen_model_configure, nmlgen_input, nmlgen_input_def, namelist_user, datestamp, input_type)
 
     # copy namelist files to rundir
     if os.path.isdir(rundir):

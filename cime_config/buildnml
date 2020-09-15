@@ -447,7 +447,7 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
                if os.path.isfile(src_file):
                    symlink_force(src_file, os.path.join(rundirdst,"INPUT","gfs_ctrl.nc"))
                else:
-                   expect(False, "initial condition file {} is required! Exiting ...".format(src_file))
+                   logger.warning("initial condition file {} is required! Exiting ...".format(src_file))
 
                lst = ["gfs_data", "sfc_data"]
                for f in lst:
@@ -458,7 +458,7 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
                            symlink_force(src_file, tgt_file)
                            logger.info("initial condition file {} linked to {}".format(src_file, tgt_file))
                        else:
-                           expect(False, "initial condition file {} is required! Exiting ...".format(src_file))
+                           logger.warning("initial condition file {} is required! Exiting ...".format(src_file))
 
                # HACK for S2S
                #if 's2s' in app:

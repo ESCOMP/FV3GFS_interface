@@ -190,13 +190,12 @@ def buildlib(caseroot, libroot, bldroot):
                 cmake_flags += " -DNETCDF_DIR={} ".format(netcdf)
         # This is the variable expected in configure_cime.cmake
         os.environ["NETCDF"] = netcdf
+        ccomp, cxxcomp, fcomp = get_compiler_names(case)
+        os.environ["CMAKE_C_COMPILER"]=ccomp.strip()
+        os.environ["CMAKE_CXX_COMPILER"]=cxxcomp.strip()
+        os.environ["CMAKE_Fortran_COMPILER"]=fcomp.strip()
         if structure_updated or not os.path.exists(os.path.join(bldroot,"CMakeFiles")):
             cmake_flags += " -C {}".format(os.path.join(bldroot,"cmake","configure_cime.cmake"))
-            ccomp, cxxcomp, fcomp = get_compiler_names(case)
-            print "CCOMP is >{}<".format(ccomp)
-            os.environ["CMAKE_C_COMPILER"]=ccomp.strip()
-            os.environ["CMAKE_CXX_COMPILER"]=cxxcomp.strip()
-            os.environ["CMAKE_Fortran_COMPILER"]=fcomp.strip()
             print "HERE {} {} {}".format( os.environ["CMAKE_C_COMPILER"], os.environ["CMAKE_CXX_COMPILER"], os.environ["CMAKE_Fortran_COMPILER"])
             os.environ["CMAKE_Platform"]="cime"
             safe_copy(os.path.join(comp_root_dir_atm,"cime","cime_config","configure_cime.cmake"),

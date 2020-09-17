@@ -460,15 +460,6 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
                        else:
                            logger.warning("initial condition file {} is required! Exiting ...".format(src_file))
 
-               # HACK for S2S
-               #if 's2s' in app:
-               #    f_lst = ['nems.configure','fd_nems.yaml','pio_in','mesh.mx025.nc']
-               #    for f in f_lst:
-               #        if os.path.isfile(os.path.join(icdir,f)):
-               #            print os.path.join(icdir,f)
-               #            safe_copy(os.path.join(icdir,f),os.path.join(rundirdst,f))
-               #    safe_copy(os.path.join(rundirdst,"fd_nems.yaml"), os.path.join(rundirdst,"fd.yaml"))
-
     # Write input file list
     with open(os.path.join(Buildconf,"ufsatm.input_data_list"), 'w') as input_data_list:
         for k,v in input_files.items():
@@ -1318,9 +1309,7 @@ def buildnml(case, caseroot, compname):
 
     # copy namelist files to rundir
     if os.path.isdir(rundir):
-        # HACK for S2S
         file1 = os.path.join(confdir, "model_configure")
-        #file1 = os.path.join("/glade","work","turuncu","UFS","S2S","rt_194339","cpld_fv3_ccpp_mom6_cice_cmeps_2d_atm_flux","model_configure")
         file2 = os.path.join(rundir, "model_configure")
         logger.debug("ufsatm configuration copy: file1 %s file2 %s " %(file1, file2))
         safe_copy(file1, file2)

@@ -480,20 +480,6 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
         if not os.path.isfile(os.path.join(rundir,f)):
             safe_copy(os.path.join(cimeroot_ufsatm,"tables",f),os.path.join(rundir,f.replace("_{}".format(app),"")))
 
-    # Create NEMS configure for the cases for single ufsatm component case
-    components = active_components(case)
-    if any('ufsatm' in x for x in components) and len(components) == 1: 
-        if not os.path.exists(os.path.join(rundir, "nems.configure")):
-            with open(os.path.join(rundir,"nems.configure"), 'w') as nems_configure:
-                # Content
-                line = "EARTH_component_list: ATM\n"
-                line = line + "ATM_model:            fv3\n"
-                line = line + "runSeq::\n"
-                line = line + "  ATM\n"
-                line = line + "::"
-                # Write
-                nems_configure.writelines(line)
-
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
 ####################################################################################
 def _create_namelist_input(case, confdir, config, infile, nmlgen_model, nmlgen_input, nmlgen_input_def, namelist_user, datestamp, input_type):

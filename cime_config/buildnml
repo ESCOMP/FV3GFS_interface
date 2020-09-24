@@ -267,10 +267,8 @@ def prep_input(case, casedocsdir, datestamp, nmlgen_input, prefix, input_type):
     # Fixed files
     for var in nmlgen_input.get_group_variables('namsfc'):
         #pylint: disable=protected-access
-        #var_type,_,_ = nmlgen_input._definition.split_type_string(var)
         var_str = str(nmlgen_input.get_value(var)).replace("'", "").strip()
-        #if 'character' in var_type and var_str and 'igbp' not in var_str[0:4]:
-        if '.grb' in var_str and 'igbp' not in var_str[0:4]:
+        if not var_str.startswith('igbp') and var_str.endswith('.grb'):
             input_files[var] = [var_str, "ln", os.path.basename(var_str)]
 
     # Look for NCEPLIBS_DIR

@@ -451,7 +451,6 @@
     <value>0</value>
     <value app="mrweather">3000000</value>
     <value app="hafs">12000000</value>
-    <value app="s2s">3000000</value>
   </values>
 </entry>
 
@@ -805,6 +804,7 @@
     <value app="mrweather">1.0</value>
     <value app="mrweather" ccpp="v16beta">3.0</value>
     <value app="hafs">3.0</value>
+    <value app="s2s">6.0</value>
   </values>
 </entry>
 
@@ -816,7 +816,7 @@
     <value>384.0</value>
     <value app="mrweather" ccpp="v16beta">240.0</value>
     <value app="hafs">126.0</value>
-    <value app="s2s">800.0</value>
+    <value app="s2s">48.0</value>
   </values>
 </entry>
 
@@ -1556,7 +1556,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -1802,7 +1801,7 @@
     <value>9</value>
     <value app="mrweather">-5</value>
     <value app="hafs">-6</value>
-    <value app="s2s">-5</value>
+    <value app="s2s">6</value>
   </values>
 </entry>
 
@@ -1814,7 +1813,7 @@
     <value>9</value>
     <value app="mrweather">5</value>
     <value app="hafs">6</value>
-    <value app="s2s">5</value>
+    <value app="s2s">6</value>
   </values>
 </entry>
 
@@ -1826,7 +1825,7 @@
     <value>9</value>
     <value app="mrweather">5</value>
     <value app="hafs">6</value>
-    <value app="s2s">5</value>
+    <value app="s2s">6</value>
   </values>
 </entry>
 
@@ -1850,7 +1849,7 @@
     <value>9</value>
     <value app="mrweather">5</value>
     <value app="hafs">6</value>
-    <value app="s2s">5</value>
+    <value app="s2s">6</value>
   </values>
 </entry>
 
@@ -1919,6 +1918,7 @@
     <value>1</value>
     <value app="mrweather">2</value>
     <value app="hafs">4</value>
+    <value app="s2s">2</value>
   </values>
 </entry>
 
@@ -1989,7 +1989,7 @@
     <value app="mrweather" hgrid="C192">4,6</value>
     <value app="mrweather" hgrid="C384">6,6</value>
     <value app="mrweather" hgrid="C768">12,8</value>
-    <value app="s2s" hgrid="C96">4,4</value>
+    <value app="s2s" hgrid="C96">3,8</value>
     <value app="s2s" hgrid="C192">4,6</value>
     <value app="s2s" hgrid="C384">6,6</value>
     <value app="s2s" hgrid="C768">12,8</value>
@@ -2030,6 +2030,7 @@
   <desc></desc>
   <values>
     <value>.false.</value>
+    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -2065,7 +2066,7 @@
     <value>1</value>
     <value app="mrweather">10</value>
     <value app="hafs">24</value>
-    <value app="s2s">10</value>
+    <value app="s2s">24</value>
   </values>
 </entry>
 
@@ -2086,7 +2087,7 @@
     <value>-1</value>
     <value app="mrweather">0</value>
     <value app="hafs">1</value>
-    <value app="s2s">0</value>
+    <value app="s2s">1</value>
   </values>
 </entry>
 
@@ -2322,7 +2323,7 @@
     <value>3</value>
     <value app="mrweather">6</value>
     <value app="hafs">6</value>
-    <value app="s2s">6</value>
+    <value app="s2s">2</value>
   </values>
 </entry>
 
@@ -2489,6 +2490,7 @@
     <value>INPUT/fv_rst.res.nc</value>
     <value app="mrweather"></value>
     <value app="hafs">fv3_increment.nc</value>
+    <value app="s2s">fv3_increment.nc</value>
   </values>
 </entry>
 
@@ -2596,7 +2598,7 @@
     <value>0.0</value>
     <value app="mrweather">10.0</value>
     <value app="hafs">5.0</value>
-    <value app="s2s">10.0</value>
+    <value app="s2s">5.0</value>
   </values>
 </entry>
 
@@ -3320,12 +3322,11 @@
 <entry id="c_cracw">
   <type>real</type>
   <group>gfdl_cloud_microphysics_nml</group>
-  <desc></desc>
+  <desc>rain accretion efficiency</desc>
   <values>
     <value>0.9</value>
     <value app="mrweather">0.8</value>
     <value app="hafs">0.8</value>
-    <value app="s2s">0.8</value>
   </values>
 </entry>
 
@@ -3337,7 +3338,6 @@
     <value>0.55</value>
     <value app="mrweather">0.5</value>
     <value app="hafs">0.5</value>
-    <value app="s2s">0.5</value>
   </values>
 </entry>
 
@@ -3349,7 +3349,6 @@
     <value>2.0e-3</value>
     <value app="mrweather">0.01</value>
     <value app="hafs">0.01</value>
-    <value app="s2s">0.01</value>
   </values>
 </entry>
 
@@ -3370,7 +3369,6 @@
     <value>0.02</value>
     <value app="mrweather">0.05</value>
     <value app="hafs">0.05</value>
-    <value app="s2s">0.05</value>
   </values>
 </entry>
 
@@ -3382,19 +3380,17 @@
     <value>270.</value>
     <value app="mrweather">300.</value>
     <value app="hafs">300.0</value>
-    <value app="s2s">300.0</value>
   </values>
 </entry>
 
 <entry id="ccn_o">
   <type>real</type>
   <group>gfdl_cloud_microphysics_nml</group>
-  <desc></desc>
+  <desc>ccn over ocean (cm^ - 3)</desc>
   <values>
     <value>90.</value>
     <value app="mrweather">100.</value>
     <value app="hafs">100.0</value>
-    <value app="s2s">100.0</value>
   </values>
 </entry>
 
@@ -3478,7 +3474,6 @@
     <value>.true.</value>
     <value app="mrweather">.false.</value>
     <value app="hafs">.false.</value>
-    <value app="s2s">.false.</value>
   </values>
 </entry>
 
@@ -3499,7 +3494,6 @@
     <value>0.20</value>
     <value app="mrweather">0.16</value>
     <value app="hafs">0.16</value>
-    <value app="s2s">0.16</value>
   </values>
 </entry>
 
@@ -3520,7 +3514,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -3532,7 +3525,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -3544,7 +3536,6 @@
     <value>0</value>
     <value app="mrweather">1</value>
     <value app="hafs">1</value>
-    <value app="s2s">1</value>
   </values>
 </entry>
 
@@ -3611,7 +3602,6 @@
     <value>1.0e-4</value>
     <value app="mrweather">8.0e-5</value>
     <value app="hafs">8.0e-5</value>
-    <value app="s2s">8.0e-5</value>
   </values>
 </entry>
 
@@ -3668,7 +3658,6 @@
     <value>2.0e-3</value>
     <value app="mrweather">1.0e-3</value>
     <value app="hafs">1.0e-3</value>
-    <value app="s2s">1.0e-3</value>
   </values>
 </entry>
 
@@ -3834,7 +3823,6 @@
     <value>0.25</value>
     <value app="mrweather">0.30</value>
     <value app="hafs">0.30</value>
-    <value app="s2s">0.30</value>
   </values>
 </entry>
 
@@ -3846,7 +3834,6 @@
     <value>0.25</value>
     <value app="mrweather">0.30</value>
     <value app="hafs">0.30</value>
-    <value app="s2s">0.30</value>
   </values>
 </entry>
 
@@ -3858,7 +3845,6 @@
     <value>0.25</value>
     <value app="mrweather">0.30</value>
     <value app="hafs">0.30</value>
-    <value app="s2s">0.30</value>
   </values>
 </entry>
 
@@ -3961,7 +3947,6 @@
     <value>300.</value>
     <value app="mrweather">225.</value>
     <value app="hafs">180.0</value>
-    <value app="s2s">225.</value>
   </values>
 </entry>
 
@@ -4028,7 +4013,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -4058,7 +4042,6 @@
     <value>8.0</value>
     <value app="mrweather">12.0</value>
     <value app="hafs">12.0</value>
-    <value app="s2s">12.0</value>
   </values>
 </entry>
 
@@ -4079,7 +4062,6 @@
     <value>0.5</value>
     <value app="mrweather">1.0</value>
     <value app="hafs">1.0</value>
-    <value app="s2s">1.0</value>
   </values>
 </entry>
 
@@ -4118,7 +4100,6 @@
     <value>5.0</value>
     <value app="mrweather">2.0</value>
     <value app="hafs">2.0</value>
-    <value app="s2s">2.0</value>
   </values>
 </entry>
 
@@ -4130,7 +4111,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -4330,7 +4310,7 @@
 <entry id="ca_global">
   <type>logical</type>
   <group>gfs_physics_nml</group>
-  <desc></desc>
+  <desc>switch for global ca</desc>
   <values>
     <value>.false.</value>
   </values>
@@ -4360,6 +4340,7 @@
   <desc></desc>
   <values>
     <value>.false.</value>
+    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -4396,7 +4377,7 @@
     <value app="mrweather" ccpp="v15p2"   hgrid="C768">3.5,0.25</value>
     <value app="mrweather" ccpp="v16beta" hgrid="C768">4.0,0.15,1.0,1.0</value>
     <value app="hafs" hgrid="C768">3.5,0.01</value>
-    <value app="s2s" hgrid="C96" >0.125,3.0</value>
+    <value app="s2s" hgrid="C96" >3.5,0.25</value>
   </values>
 </entry>
 
@@ -4735,7 +4716,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -4804,7 +4784,7 @@
     <value>0.0</value>
     <value app="mrweather">6.0</value>
     <value app="hafs">3.0</value>
-    <value app="s2s">24.0</value>
+    <value app="s2s">6.0</value>
   </values>
 </entry>
 
@@ -4861,7 +4841,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -4918,6 +4897,16 @@
   <values>
     <value>0</value>
     <value app="hafs">6</value>
+    <value app="s2s">6</value>
+  </values>
+</entry>
+
+<entry id="iau_drymassfixer">
+  <type>logical</type>
+  <group>gfs_physics_nml</group>
+  <desc></desc>
+  <values>
+    <value>.false.</value>
   </values>
 </entry>
 
@@ -4946,6 +4935,7 @@
   <values>
     <value>-1</value>
     <value app="hafs">30</value>
+    <value app="s2s">30</value>
   </values>
 </entry>
 
@@ -5051,7 +5041,6 @@
     <value>99</value>
     <value app="mrweather">11</value>
     <value app="hafs">11</value>
-    <value app="s2s">11</value>
   </values>
 </entry>
 
@@ -5090,7 +5079,7 @@
     <value>4</value>
     <value app="mrweather" ccpp="v16beta">1</value>
     <value app="hafs">2</value>
-    <value app="s2s">1</value>
+    <value app="s2s">2</value>
   </values>
 </entry>
 
@@ -5211,6 +5200,7 @@
   <desc></desc>
   <values>
     <value>0</value>
+    <value app="s2s">1</value>
   </values>
 </entry>
 
@@ -5327,7 +5317,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -5685,12 +5674,30 @@
   </values>
 </entry>
 
+<entry id="nca_g">
+  <type>integer</type>
+  <group>gfs_physics_nml</group>
+  <desc>number of independent cellular automata</desc>
+  <values>
+    <value>1</value>
+  </values>
+</entry>
+
 <entry id="ncells">
   <type>integer</type>
   <group>gfs_physics_nml</group>
   <desc></desc>
   <values>
     <value>5</value>
+  </values>
+</entry>
+
+<entry id="ncells_g">
+  <type>integer</type>
+  <group>gfs_physics_nml</group>
+  <desc>cellular automata finer grid</desc>
+  <values>
+    <value>1</value>
   </values>
 </entry>
 
@@ -5702,7 +5709,6 @@
     <value>1</value>
     <value app="mrweather">5</value>
     <value app="hafs">5</value>
-    <value app="s2s">5</value>
   </values>
 </entry>
 
@@ -5730,6 +5736,16 @@
   <desc></desc>
   <values>
     <value>10</value>
+    <value app="s2s">30</value>
+  </values>
+</entry>
+
+<entry id="nlives_g">
+  <type>integer</type>
+  <group>gfs_physics_nml</group>
+  <desc>cellular automata lifetime</desc>
+  <values>
+    <value>100</value>
   </values>
 </entry>
 
@@ -5748,6 +5764,26 @@
   <desc></desc>
   <values>
     <value>100000</value>
+    <value app="s2s">1000000</value>
+  </values>
+</entry>
+
+<entry id="nseed_g">
+  <type>integer</type>
+  <group>gfs_physics_nml</group>
+  <desc>cellular automata seed frequency</desc>
+  <values>
+    <value>100</value>
+  </values>
+</entry>
+
+<entry id="nsmooth">
+  <type>integer</type>
+  <group>gfs_physics_nml</group>
+  <desc>number of passes through smoother</desc>
+  <values>
+    <value>100</value>
+    <value app="s2s">1</value>
   </values>
 </entry>
 
@@ -5757,6 +5793,7 @@
   <desc></desc>
   <values>
     <value>1</value>
+    <value app="s2s">100</value>
   </values>
 </entry>
 
@@ -5809,7 +5846,6 @@
     <value>.true.</value>
     <value app="mrweather">.false.</value>
     <value app="hafs">.false.</value>
-    <value app="s2s">.false.</value>
   </values>
 </entry>
 
@@ -5821,7 +5857,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -5943,6 +5978,7 @@
   <desc></desc>
   <values>
     <value>.false.</value>
+    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -6142,7 +6178,6 @@
     <value>.false.</value>
     <value app="mrweather">.true.</value>
     <value app="hafs">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -6228,6 +6263,44 @@
   <values>
     <value>.false.</value>
     <value app="hafs">.true.</value>
+  </values>
+</entry>
+
+<entry id="ca_amplitude">
+  <type>real</type>
+  <group>gfs_physics_nml</group>
+  <desc>amplitude of ca trigger perturbation</desc>
+  <values>
+    <value>500.0</value>
+    <value app="s2s">0.5</value>
+  </values>
+</entry>
+
+<entry id="ca_closure">
+  <type>logical</type>
+  <group>gfs_physics_nml</group>
+  <desc>logical switch for ca on closure</desc>
+  <values>
+    <value>.false.</value>
+  </values>
+</entry>
+
+<entry id="ca_entr">
+  <type>logical</type>
+  <group>gfs_physics_nml</group>
+  <desc>logical switch for ca on entrainment</desc>
+  <values>
+    <value>.false.</value>
+  </values>
+</entry>
+
+<entry id="ca_trigger">
+  <type>logical</type>
+  <group>gfs_physics_nml</group>
+  <desc>logical switch for ca on trigger</desc>
+  <values>
+    <value>.false.</value>
+    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -6819,6 +6892,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -6839,6 +6913,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -6850,6 +6925,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7461,6 +7537,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7471,6 +7548,7 @@
   <values>
     <value>0.0</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7500,6 +7578,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7538,6 +7617,7 @@
     <value>0.0</value>
     <value app="mrweather">99999.0</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7558,6 +7638,7 @@
     <value>0.0</value>
     <value app="mrweather">99999.0</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7635,6 +7716,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7655,6 +7737,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -7675,6 +7758,7 @@
     <value>0.0</value>
     <value app="mrweather">99999</value>
     <value app="hafs">99999.0</value>
+    <value app="s2s">99999.0</value>
   </values>
 </entry>
 
@@ -8236,7 +8320,6 @@
     <value>.true.</value>
     <value app="mrweather">.false.</value>
     <value app="hafs">.false.</value>
-    <value app="s2s">.false.</value>
   </values>
 </entry>
 
@@ -8251,7 +8334,7 @@
     <value app="mrweather" hgrid="C96">150</value>
     <value app="mrweather" hgrid="C768">1728</value>
     <value app="hafs" hgrid="C768">1320</value>
-    <value app="s2s" hgrid="C96">320</value>
+    <value app="s2s" hgrid="C96">318</value>
   </values>
 </entry>
 
@@ -8264,7 +8347,7 @@
   <values>
     <value>2012</value>
     <value app="hafs">2019</value>
-    <value app="s2s">2001</value>
+    <value app="s2s">2016</value>
   </values>
 </entry>
 
@@ -8277,6 +8360,7 @@
   <values>
     <value>1</value>
     <value app="hafs">9</value>
+    <value app="s2s">10</value>
   </values>
 </entry>
 
@@ -8288,6 +8372,7 @@
   </desc>
   <values>
     <value>1</value>
+    <value app="s2s">3</value>
   </values>
 </entry>
 
@@ -8334,7 +8419,7 @@
   <values>
     <value>840</value>
     <value app="hafs">126</value>
-    <value app="s2s">744</value>
+    <value app="s2s">48</value>
   </values>
 </entry>
 
@@ -8538,7 +8623,7 @@
     <value app="mrweather" hgrid="C384">36</value>
     <value app="mrweather" hgrid="C768">36</value>
     <value app="hafs" hgrid="C768">40</value>
-    <value app="s2s" hgrid="C96" >12</value>
+    <value app="s2s" hgrid="C96" >6</value>
   </values>
 </entry>
 
@@ -8561,7 +8646,6 @@
   </desc>
   <values>
     <value>.false.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -8599,7 +8683,7 @@
   <values>
     <value>gaussian_grid</value>
     <value app="hafs">rotated_latlon</value>
-    <value app="s2s">global_latlon</value>
+    <value app="s2s">cubed_sphere_grid</value>
   </values>
 </entry>
 
@@ -8646,7 +8730,6 @@
   <values>
     <value>.false.</value>
     <value app="mrweather">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -8659,7 +8742,6 @@
   <values>
     <value>.false.</value>
     <value app="mrweather">.true.</value>
-    <value app="s2s">.true.</value>
   </values>
 </entry>
 
@@ -8675,7 +8757,6 @@
     <value hgrid="C192">768</value>
     <value hgrid="C384">1536</value>
     <value hgrid="C768">3072</value>
-    <value app="s2s" hgrid="C96">360</value>
   </values>
 </entry>
 
@@ -8691,7 +8772,7 @@
     <value hgrid="C192">384</value>
     <value hgrid="C384">768</value>
     <value hgrid="C768">1536</value>
-    <value app="s2s" hgrid="C96">181</value>
+    <value app="s2s" hgrid="C96">190</value>
   </values>
 </entry>
 
@@ -8714,7 +8795,7 @@
   </desc>
   <values>
     <value>3</value>
-    <value app="s2s">24</value>
+    <value app="s2s">6</value>
   </values>
 </entry>
 

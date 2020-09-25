@@ -74,7 +74,7 @@
 
     <entry id="COMP_CLASSES">
       <values>
-	<value compset="ufsatm.*_SLND_SICE_SOCN_SROF_SGLC_SWAV">ATM</value>
+	<value compset="ufsatm.*_SLND_SICE_SOCN_SROF_SGLC_SWAV">CPL,ATM</value>
 	<value compset="ufsatm.*_SLND_CICE.*_MOM6.*_SROF_SGLC_SWAV">CPL,ATM,OCN,ICE</value>
 	<value compset="ufsatm.*_SLND_CICE%PRES_DOCN%DOM_SROF_SGLC_SWAV">CPL,ATM,OCN,ICE</value>
       </values>
